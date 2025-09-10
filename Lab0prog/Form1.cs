@@ -340,7 +340,6 @@ namespace Lab0prog
                         else
                         {
                             invalidCount++;
-                            // Вывод некорректных записей
                             MessageBox.Show($"Некорректная запись: {person.LastName} {person.FirstName} - {errorMessage}", "Информация", 
                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
@@ -568,7 +567,6 @@ namespace Lab0prog
             {
                 string input = e.FormattedValue.ToString().Trim();
 
-                // Проверяем что только допустимые значения
                 if (input != "Мужской" && input != "Женский")
                 {
                     MessageBox.Show("Введите 'Мужской' или 'Женский'", "Ошибка",
