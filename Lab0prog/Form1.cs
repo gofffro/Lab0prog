@@ -308,5 +308,34 @@ namespace Lab0prog
                 lblTallestWoman.Text = "Нет данных";
             }
         }
+
+        private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            try
+            {
+                MessageBox.Show(
+                    $"Ошибка ввода данных:\n{e.Exception.Message}",
+                    "Ошибка данных",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+
+                e.ThrowException = false;
+
+                if (dataGridView1.IsCurrentCellInEditMode)
+                {
+                    dataGridView1.CancelEdit();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Неожиданная ошибка: {ex.Message}",
+                    "Критическая ошибка",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
+        }
     }
 }
