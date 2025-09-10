@@ -299,7 +299,61 @@ namespace Lab0prog
 
                 if (result != null)
                 {
-                    return result;
+                    var validPeople = new List<Person>();
+                    int invalidCount = 0;
+
+                    foreach (var person in result)
+                    {
+                        bool isValid = true;
+                        string errorMessage = "";
+
+                        if (string.IsNullOrWhiteSpace(person.LastName) ||
+                            !System.Text.RegularExpressions.Regex.IsMatch(person.LastName, @"^[a-zA-Zа-яА-ЯёЁ\- ]+$"))
+                        {
+                            isValid = false;
+                            errorMessage += "Некорректная фамилия ";
+                        }
+
+                        if (string.IsNullOrWhiteSpace(person.FirstName) ||
+                            !System.Text.RegularExpressions.Regex.IsMatch(person.FirstName, @"^[a-zA-Zа-яА-ЯёЁ\- ]+$"))
+                        {
+                            isValid = false;
+                            errorMessage += "Некорректное имя ";
+                        }
+
+                        if (person.Gender != "Мужской" && person.Gender != "Женский")
+                        {
+                            isValid = false;
+                            errorMessage += "Некорректный пол ";
+                        }
+
+                        if (person.Height <= 0 || person.Height > 300) 
+                        {
+                            isValid = false;
+                            errorMessage += "Некорректный рост ";
+                        }
+
+                        if (isValid)
+                        {
+                            validPeople.Add(person);
+                        }
+                        else
+                        {
+                            invalidCount++;
+                            // Вывод некорректных записей
+                            MessageBox.Show($"Некорректная запись: {person.LastName} {person.FirstName} - {errorMessage}", "Информация", 
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+
+                    if (invalidCount > 0)
+                    {
+                        MessageBox.Show($"Загружено {validPeople.Count} корректных записей.\n" +
+                                       $"Пропущено {invalidCount} некорректных записей.",
+                                       "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+
+                    return validPeople;
                 }
                 else
                 {
@@ -404,7 +458,12 @@ namespace Lab0prog
                     people = LoadFromJson(openDialog.FileName);
                     dataGridView1.DataSource = null;
                     dataGridView1.DataSource = people;
-                    MessageBox.Show($"Загружено {people.Count} записей", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    if (people.Count > 0)
+                    {
+                        MessageBox.Show($"Загружено {people.Count} корректных записей",
+                            "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
             }
         }
