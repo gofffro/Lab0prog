@@ -14,13 +14,13 @@
   {
     "LastName": "Уткин",
     "FirstName": "Дмитрий",
-    "Gender": "Мужчина",
+    "Gender": "Мужской",
     "Height": 180.4
   },
   {
     "LastName": "Уткина",
     "FirstName": "Мария",
-    "Gender": "Женщина",
+    "Gender": "Женский",
     "Height": 166.6
   }
 ]
