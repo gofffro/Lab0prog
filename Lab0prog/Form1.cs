@@ -20,32 +20,153 @@ namespace Lab0prog
         {
             try
             {
-                if (!double.TryParse(densityTextBox.Text, out double density) || density <= 0)
+                double density;
+                try
                 {
-                    resultTextBlock.Text = "Введите плотность > 0";
+                    density = ParseDoubleWithCommaSupport(densityTextBox.Text);
+                }
+                catch (FormatException)
+                {
+                    resultTextBlock.Text = "Ошибка: плотность должна быть числом";
+                    densityTextBox.Focus();
                     return;
                 }
 
-                if (!double.TryParse(radiusTextBox.Text, out double radius) || radius <= 0)
+                if (density <= 0)
                 {
-                    resultTextBlock.Text = "Введите радиус > 0";
+                    resultTextBlock.Text = "Ошибка: плотность должна быть > 0";
+                    densityTextBox.Focus();
                     return;
                 }
 
-                if (!double.TryParse(massTextBox.Text, out double mass) || mass <= 0)
+                if (density > 1E+100)
                 {
-                    resultTextBlock.Text = "Введите массу > 0";
+                    resultTextBlock.Text = "Ошибка: слишком большая плотность";
+                    densityTextBox.Focus();
                     return;
                 }
 
-                // h = m / (π * r² * ρ)
-                double diskThick = mass / (Math.PI * Math.Pow(radius, 2) * density);
+                double radius;
+                try
+                {
+                    radius = ParseDoubleWithCommaSupport(radiusTextBox.Text);
+                }
+                catch (FormatException)
+                {
+                    resultTextBlock.Text = "Ошибка: радиус должен быть числом";
+                    radiusTextBox.Focus();
+                    return;
+                }
 
-                resultTextBlock.Text = $"{diskThick:F6} м";
+                if (radius <= 0)
+                {
+                    resultTextBlock.Text = "Ошибка: радиус должен быть > 0";
+                    radiusTextBox.Focus();
+                    return;
+                }
+
+                if (radius > 1E+100)
+                {
+                    resultTextBlock.Text = "Ошибка: слишком большой радиус";
+                    radiusTextBox.Focus();
+                    return;
+                }
+
+                double mass;
+                try
+                {
+                    mass = ParseDoubleWithCommaSupport(massTextBox.Text);
+                }
+                catch (FormatException)
+                {
+                    resultTextBlock.Text = "Ошибка: масса должна быть числом";
+                    massTextBox.Focus();
+                    return;
+                }
+
+                if (mass <= 0)
+                {
+                    resultTextBlock.Text = "Ошибка: масса должна быть > 0";
+                    massTextBox.Focus();
+                    return;
+                }
+
+                if (mass > 1E+100)
+                {
+                    resultTextBlock.Text = "Ошибка: слишком большая масса";
+                    massTextBox.Focus();
+                    return;
+                }
+
+                double radiusSquared;
+
+                try
+                {
+                    radiusSquared = Math.Pow(radius, 2);
+                    if (double.IsInfinity(radiusSquared))
+                    {
+                        resultTextBlock.Text = "Ошибка: радиус слишком большой для вычислений";
+                        radiusTextBox.Focus();
+                        return;
+                    }
+                }
+                catch (OverflowException)
+                {
+                    resultTextBlock.Text = "Ошибка: радиус слишком большой";
+                    radiusTextBox.Focus();
+                    return;
+                }
+
+                double denominator;
+                try
+                {
+                    denominator = Math.PI * radiusSquared * density;
+                    if (double.IsInfinity(denominator) || denominator == 0)
+                    {
+                        resultTextBlock.Text = "Ошибка: вычисления привели к недопустимому результату";
+                        return;
+                    }
+                }
+                catch (OverflowException)
+                {
+                    resultTextBlock.Text = "Ошибка: значения слишком большие для вычислений";
+                    return;
+                }
+
+                double diskThickMeters;
+                try
+                {
+                    diskThickMeters = mass / denominator;
+
+                    if (double.IsInfinity(diskThickMeters) || double.IsNaN(diskThickMeters))
+                    {
+                        resultTextBlock.Text = "Ошибка: недопустимый результат вычислений";
+                        return;
+                    }
+
+                    if (diskThickMeters > 1E+10)
+                    {
+                        resultTextBlock.Text = "Ошибка: толщина слишком большая (проверьте входные данные)";
+                        return;
+                    }
+                }
+                catch (DivideByZeroException)
+                {
+                    resultTextBlock.Text = "Ошибка: деление на ноль (проверьте входные данные)";
+                    return;
+                }
+                catch (OverflowException)
+                {
+                    resultTextBlock.Text = "Ошибка: переполнение при вычислениях";
+                    return;
+                }
+
+                double diskThickCm = diskThickMeters * 100;
+                resultTextBlock.Text = $"{diskThickCm:F6} см";
             }
-            catch
+            catch (Exception ex)
             {
-                resultTextBlock.Text = "Ошибка расчета";
+                resultTextBlock.Text = $"Неожиданная ошибка: {ex.Message}";
             }
         }
 
@@ -53,6 +174,20 @@ namespace Lab0prog
         {
             CalculateDisk();
         }
+
+        private double ParseDoubleWithCommaSupport(string input)
+        {
+            string normalizedInput = input.Replace(',', '.');
+
+            if (double.TryParse(normalizedInput, System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture, out double result))
+            {
+                return result;
+            }
+
+            throw new FormatException("Некорректный числовой формат");
+        }
+
 
         // второе задание
 
@@ -69,7 +204,7 @@ namespace Lab0prog
             var peopleList = new List<Person>();
             var maleNames = new[] { "Иван", "Алексей", "Дмитрий", "Сергей", "Андрей", "Михаил" };
             var femaleNames = new[] { "Елена", "Анна", "Мария", "Ольга", "Наталья", "Ирина" };
-            var lastMaleNames = new[] { "Иванов", "Петров", "Сидоров", "Смирнов", "Кузнецов", "Попов", "Уткин"};
+            var lastMaleNames = new[] { "Иванов", "Петров", "Сидоров", "Смирнов", "Кузнецов", "Попов", "Уткин" };
             var lastFemaleNames = new[] { "Иванова", "Петрова", "Сидорова", "Смирнова", "Кузнецова", "Попова", "Уткина" };
 
             for (int i = 0; i < count; ++i)
@@ -80,11 +215,11 @@ namespace Lab0prog
 
                 if (isMale)
                 {
-                    gender = "Мужчина";
+                    gender = "Мужской";
                 }
                 else
                 {
-                    gender = "Женщина";
+                    gender = "Женский";
                 }
 
                 string firstName;
@@ -180,24 +315,23 @@ namespace Lab0prog
 
         private (double avgMale, double avgFemale, Person tallestMan, Person tallestWoman) CalculateStatistics(List<Person> peopleList)
         {
-            var men = peopleList.Where(p => p.Gender == "Мужчина").ToList();
-            var women = peopleList.Where(p => p.Gender == "Женщина").ToList();
+            var validPeople = peopleList.Where(p => p.Height > 0).ToList();
+
+            var men = validPeople.Where(p => p.Gender == "Мужской").ToList();
+            var women = validPeople.Where(p => p.Gender == "Женский").ToList();
 
             double avgMale;
-
-            if (men.Any())
+            if (men.Count > 0)
             {
                 avgMale = men.Average(p => p.Height);
             }
-
             else
             {
                 avgMale = 0;
             }
 
             double avgFemale;
-
-            if (women.Any())
+            if (women.Count > 0)
             {
                 avgFemale = women.Average(p => p.Height);
             }
@@ -207,21 +341,19 @@ namespace Lab0prog
             }
 
             Person tallestMan;
-
-            if (men.OrderByDescending(p => p.Height).FirstOrDefault() != null)
+            if (men.Count > 0)
             {
-                tallestMan = men.OrderByDescending(p => p.Height).FirstOrDefault();
+                tallestMan = men.OrderByDescending(p => p.Height).First();
             }
             else
             {
                 tallestMan = new Person();
             }
 
-
             Person tallestWoman;
-            if (women.OrderByDescending(p => p.Height).FirstOrDefault() != null)
+            if (women.Count > 0)
             {
-                tallestWoman = women.OrderByDescending(p => p.Height).FirstOrDefault();
+                tallestWoman = women.OrderByDescending(p => p.Height).First();
             }
             else
             {
@@ -313,12 +445,24 @@ namespace Lab0prog
         {
             try
             {
-                MessageBox.Show(
-                    $"Ошибка ввода данных:\n{e.Exception.Message}",
-                    "Ошибка данных",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
+                if (e.Exception is FormatException && e.ColumnIndex == 3)
+                {
+                    MessageBox.Show(
+                        "Используйте запятые вместо точки для десятичных дробей.\nНапример: 180,5 вместо 180.5",
+                        "Ошибка формата",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+                }
+                else
+                {
+                    MessageBox.Show(
+                        $"Ошибка ввода данных:\n{e.Exception.Message}",
+                        "Ошибка данных",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+                }
 
                 e.ThrowException = false;
 
@@ -335,6 +479,59 @@ namespace Lab0prog
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error
                 );
+            }
+        }
+
+        private void dataGridView1_EditingControlShowing(object sender,
+    DataGridViewEditingControlShowingEventArgs e)
+        {
+            e.CellStyle.BackColor = Color.Aquamarine;
+        }
+
+        private void ValidateNameCell(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            if (e.ColumnIndex == 0 || e.ColumnIndex == 1)
+            {
+                string input = e.FormattedValue.ToString();
+
+                if (!System.Text.RegularExpressions.Regex.IsMatch(input, @"^[a-zA-Zа-яА-ЯёЁ\- ]+$"))
+                {
+                    MessageBox.Show("Можно вводить только буквы, дефисы и пробелы", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    e.Cancel = true;
+                }
+            }
+        }
+
+        private void ValidateGenderCell(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            if (e.ColumnIndex == 2)
+            {
+                string input = e.FormattedValue.ToString().Trim();
+
+                // Проверяем что только допустимые значения
+                if (input != "Мужской" && input != "Женский")
+                {
+                    MessageBox.Show("Введите 'Мужской' или 'Женский'", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    e.Cancel = true;
+                }
+            }
+        }
+
+        private void ValidateHeightCell(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            if (e.ColumnIndex == 3)
+            {
+                string input = e.FormattedValue.ToString().Replace(',', '.');
+
+                if (!double.TryParse(input, System.Globalization.NumberStyles.Any,
+                    System.Globalization.CultureInfo.InvariantCulture, out double height) || height <= 0)
+                {
+                    MessageBox.Show("Введите положительное число", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    e.Cancel = true;
+                }
             }
         }
     }

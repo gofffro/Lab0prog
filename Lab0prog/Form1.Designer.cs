@@ -163,7 +163,11 @@
             dataGridView1.Name = "dataGridView1";
             dataGridView1.Size = new Size(572, 231);
             dataGridView1.TabIndex = 4;
+            dataGridView1.EditingControlShowing += dataGridView1_EditingControlShowing;
             dataGridView1.DataError += dataGridView1_DataError;
+            dataGridView1.CellValidating += ValidateNameCell;
+            dataGridView1.CellValidating += ValidateGenderCell;
+            dataGridView1.CellValidating += ValidateHeightCell;
             // 
             // btnGenerate
             // 
