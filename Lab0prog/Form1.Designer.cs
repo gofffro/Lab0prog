@@ -38,6 +38,24 @@
             label4 = new Label();
             CalculateButton = new Button();
             label5 = new Label();
+            groupBox1 = new GroupBox();
+            dataGridView1 = new DataGridView();
+            btnGenerate = new Button();
+            btnSave = new Button();
+            btnLoad = new Button();
+            btnCalculateStats = new Button();
+            groupBox2 = new GroupBox();
+            lblTallestWoman = new Label();
+            lblTallestMan = new Label();
+            lblAvgFemale = new Label();
+            lblAvgMale = new Label();
+            label9 = new Label();
+            label8 = new Label();
+            label7 = new Label();
+            label6 = new Label();
+            groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -92,6 +110,7 @@
             // 
             resultTextBlock.Location = new Point(44, 281);
             resultTextBlock.Name = "resultTextBlock";
+            resultTextBlock.ReadOnly = true;
             resultTextBlock.Size = new Size(189, 23);
             resultTextBlock.TabIndex = 7;
             // 
@@ -123,11 +142,169 @@
             label5.TabIndex = 10;
             label5.Text = "Из материала с плотностью p \r\nизготовлен диск радиусом r.\r\nКаким должна быть толщина диска\r\nчтобы он имел массу m? ";
             // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(dataGridView1);
+            groupBox1.Controls.Add(btnGenerate);
+            groupBox1.Controls.Add(btnSave);
+            groupBox1.Controls.Add(btnLoad);
+            groupBox1.Controls.Add(btnCalculateStats);
+            groupBox1.Location = new Point(280, 25);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(584, 334);
+            groupBox1.TabIndex = 11;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Статистика роста людей";
+            // 
+            // dataGridView1
+            // 
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Location = new Point(6, 22);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.Size = new Size(572, 231);
+            dataGridView1.TabIndex = 4;
+            // 
+            // btnGenerate
+            // 
+            btnGenerate.Location = new Point(6, 259);
+            btnGenerate.Name = "btnGenerate";
+            btnGenerate.Size = new Size(130, 30);
+            btnGenerate.TabIndex = 0;
+            btnGenerate.Text = "Сгенерировать";
+            btnGenerate.UseVisualStyleBackColor = true;
+            btnGenerate.Click += btnGenerate_Click;
+            // 
+            // btnSave
+            // 
+            btnSave.Location = new Point(142, 259);
+            btnSave.Name = "btnSave";
+            btnSave.Size = new Size(130, 30);
+            btnSave.TabIndex = 1;
+            btnSave.Text = "Сохранить в JSON";
+            btnSave.UseVisualStyleBackColor = true;
+            btnSave.Click += btnSave_Click;
+            // 
+            // btnLoad
+            // 
+            btnLoad.Location = new Point(278, 259);
+            btnLoad.Name = "btnLoad";
+            btnLoad.Size = new Size(130, 30);
+            btnLoad.TabIndex = 2;
+            btnLoad.Text = "Загрузить из JSON";
+            btnLoad.UseVisualStyleBackColor = true;
+            btnLoad.Click += btnLoad_Click;
+            // 
+            // btnCalculateStats
+            // 
+            btnCalculateStats.Location = new Point(414, 259);
+            btnCalculateStats.Name = "btnCalculateStats";
+            btnCalculateStats.Padding = new Padding(0, 3, 0, 0);
+            btnCalculateStats.Size = new Size(130, 30);
+            btnCalculateStats.TabIndex = 3;
+            btnCalculateStats.Text = "Рассчитать статистику";
+            btnCalculateStats.UseVisualStyleBackColor = true;
+            btnCalculateStats.Click += btnCalculateStats_Click;
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(lblTallestWoman);
+            groupBox2.Controls.Add(lblTallestMan);
+            groupBox2.Controls.Add(lblAvgFemale);
+            groupBox2.Controls.Add(lblAvgMale);
+            groupBox2.Controls.Add(label9);
+            groupBox2.Controls.Add(label8);
+            groupBox2.Controls.Add(label7);
+            groupBox2.Controls.Add(label6);
+            groupBox2.Location = new Point(280, 365);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(584, 94);
+            groupBox2.TabIndex = 12;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Результаты статистики";
+            // 
+            // lblTallestWoman
+            // 
+            lblTallestWoman.AutoSize = true;
+            lblTallestWoman.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblTallestWoman.Location = new Point(378, 47);
+            lblTallestWoman.Name = "lblTallestWoman";
+            lblTallestWoman.Size = new Size(12, 15);
+            lblTallestWoman.TabIndex = 7;
+            lblTallestWoman.Text = "-";
+            // 
+            // lblTallestMan
+            // 
+            lblTallestMan.AutoSize = true;
+            lblTallestMan.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblTallestMan.Location = new Point(378, 22);
+            lblTallestMan.Name = "lblTallestMan";
+            lblTallestMan.Size = new Size(12, 15);
+            lblTallestMan.TabIndex = 6;
+            lblTallestMan.Text = "-";
+            // 
+            // lblAvgFemale
+            // 
+            lblAvgFemale.AutoSize = true;
+            lblAvgFemale.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblAvgFemale.Location = new Point(148, 47);
+            lblAvgFemale.Name = "lblAvgFemale";
+            lblAvgFemale.Size = new Size(12, 15);
+            lblAvgFemale.TabIndex = 5;
+            lblAvgFemale.Text = "-";
+            // 
+            // lblAvgMale
+            // 
+            lblAvgMale.AutoSize = true;
+            lblAvgMale.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblAvgMale.Location = new Point(146, 22);
+            lblAvgMale.Name = "lblAvgMale";
+            lblAvgMale.Size = new Size(12, 15);
+            lblAvgMale.TabIndex = 4;
+            lblAvgMale.Text = "-";
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(278, 47);
+            label9.Name = "label9";
+            label9.Size = new Size(94, 15);
+            label9.TabIndex = 3;
+            label9.Text = "Самая высокая:";
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(278, 22);
+            label8.Name = "label8";
+            label8.Size = new Size(100, 15);
+            label8.TabIndex = 2;
+            label8.Text = "Самый высокий:";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(6, 47);
+            label7.Name = "label7";
+            label7.Size = new Size(136, 15);
+            label7.TabIndex = 1;
+            label7.Text = "Средний рост женщин:";
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(6, 22);
+            label6.Name = "label6";
+            label6.Size = new Size(134, 15);
+            label6.TabIndex = 0;
+            label6.Text = "Средний рост мужчин:";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(808, 429);
+            ClientSize = new Size(876, 471);
+            Controls.Add(groupBox2);
+            Controls.Add(groupBox1);
             Controls.Add(label5);
             Controls.Add(CalculateButton);
             Controls.Add(label4);
@@ -139,7 +316,11 @@
             Controls.Add(densityTextBox);
             Controls.Add(label1);
             Name = "Form1";
-            Text = "Form1";
+            Text = "Лабораторная работа";
+            groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -155,5 +336,20 @@
         private Label label4;
         private Button CalculateButton;
         private Label label5;
+        private GroupBox groupBox1;
+        private DataGridView dataGridView1;
+        private Button btnGenerate;
+        private Button btnSave;
+        private Button btnLoad;
+        private Button btnCalculateStats;
+        private GroupBox groupBox2;
+        private Label lblTallestWoman;
+        private Label lblTallestMan;
+        private Label lblAvgFemale;
+        private Label lblAvgMale;
+        private Label label9;
+        private Label label8;
+        private Label label7;
+        private Label label6;
     }
 }
